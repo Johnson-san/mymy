@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>sora の自己紹介</title>
+<style>
+  :root {
+    --bg: #f4f7f5;
+    --ink: #17302a;
+    --muted: #46605a;
+    --track: #1d6b4c;
+    --line: #cfdcd5;
+    --white: #ffffff;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 4rem; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", sans-serif;
+    line-height: 1.9;
+    font-size: 1rem;
+  }
+  a { color: var(--track); }
+  a:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+
+  /* ヒーロー: レーン線と流れる距離マーカー */
+  .hero {
+    position: relative;
+    overflow: hidden;
+    background:
+      repeating-linear-gradient(to bottom,
+        transparent 0, transparent 46px,
+        rgba(255,255,255,.55) 46px, rgba(255,255,255,.55) 48px),
+      var(--track);
+    color: var(--white);
+    padding: 4.5rem 1.25rem 3.5rem;
+  }
+  .hero::before {
+    content: "";
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(to right,
+      transparent 0, transparent 140px,
+      rgba(255,255,255,.16) 140px, rgba(255,255,255,.16) 146px);
+    animation: flow 6s linear infinite;
+  }
+  @keyframes flow { to { background-position-x: -146px; } }
+  .wrap { position: relative; max-width: 40rem; margin: 0 auto; }
+  .hero h1 {
+    margin: 0 0 .75rem;
+    font-size: clamp(2rem, 7vw, 3rem);
+    line-height: 1.3;
+    font-weight: 800;
+    letter-spacing: .02em;
+    animation: slidein .7s ease-out both;
+  }
+  .hero p { margin: 0; font-size: 1.1rem; animation: slidein .7s ease-out .15s both; }
+  @keyframes slidein {
+    from { opacity: 0; transform: translateX(-40px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  /* C. 流れる文字帯 */
+  .marquee {
+    overflow: hidden;
+    background: var(--white);
+    border-bottom: 1px solid var(--line);
+    color: var(--ink);
+    font-family: "Arial Black", "Helvetica Neue", Arial, sans-serif;
+    font-weight: 900;
+    letter-spacing: .08em;
+    white-space: nowrap;
+  }
+  .marquee-track {
+    display: inline-block;
+    padding: .45rem 0;
+    animation: marquee 28s linear infinite;
+  }
+  .marquee:hover .marquee-track { animation-play-state: paused; }
+  .marquee-track span { padding-right: 1.5rem; }
+  @keyframes marquee { to { transform: translateX(-50%); } }
+
+  /* ページ内メニュー */
+  nav { position: sticky; top: 0; background: var(--ink); z-index: 5; }
+  nav ul {
+    list-style: none; margin: 0 auto; padding: 0 .65rem;
+    max-width: 40rem;
+    display: flex; flex-wrap: wrap; gap: 0 .5rem;
+  }
+  nav a {
+    position: relative; overflow: hidden;
+    display: block; padding: .75rem .6rem;
+    color: var(--white); text-decoration: none; font-size: .95rem;
+    transition: background .2s, color .2s;
+  }
+  nav a::after {
+    content: "";
+    position: absolute; top: 0; left: -60%;
+    width: 40%; height: 100%;
+    background: linear-gradient(100deg, transparent, rgba(29,107,76,.45), transparent);
+    transform: skewX(-20deg);
+  }
+  nav a:hover, nav a:focus-visible { background: var(--white); color: var(--ink); }
+  nav a:hover::after { animation: shine .6s ease-out; }
+  nav a:focus-visible { outline: 3px solid var(--white); outline-offset: -3px; }
+  @keyframes shine { to { left: 130%; } }
+
+  main { padding: 2.5rem 1.25rem 3rem; }
+  section {
+    position: relative;
+    max-width: 40rem; margin: 0 auto 2.5rem;
+    padding-left: 1.1rem;
+  }
+  section::before {
+    content: "";
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: 4px; background: var(--track);
+    transform-origin: top;
+  }
+  h2 { margin: 0 0 .5rem; font-size: 1.4rem; line-height: 1.5; }
+  section p { margin: 0 0 1rem; max-width: 34em; }
+  h3 { margin: 1.75rem 0 .5rem; font-size: 1.1rem; line-height: 1.5; }
+  dl { margin: 0; max-width: 34em; }
+  dd { margin: 0; }
+  .facts { display: grid; grid-template-columns: 7em 1fr; gap: .5rem 1rem; }
+  .facts dt { font-weight: 700; color: var(--track); }
+  .qa dt { font-weight: 700; margin-top: .75rem; }
+
+  /* B. スクロール演出（対応ブラウザのみ。非対応なら普通に表示） */
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      section::before {
+        animation: grow linear both;
+        animation-timeline: view();
+        animation-range: entry 0% entry 70%;
+      }
+      section h2, section h3, section p, section dl {
+        animation: fromleft linear both;
+        animation-timeline: view();
+        animation-range: entry 10% entry 80%;
+      }
+      @keyframes grow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+      @keyframes fromleft {
+        from { opacity: 0; transform: translateX(-28px); }
+        to { opacity: 1; transform: translateX(0); }
+      }
+    }
+  }
+
+  footer {
+    max-width: 40rem; margin: 0 auto;
+    padding: 1.5rem 1.25rem 3rem;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+  }
+  footer p { margin: 0 0 .5rem; }
+
+  /* 動きを減らす設定の人には、すべての動きを止める */
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .hero::before, .hero h1, .hero p, .marquee-track { animation: none; }
+    nav a:hover::after { animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <h1>はじめまして、<br>soraです。</h1>
+    <p>同じ学年のみなさんと、仲良くなりたいです。</p>
+  </div>
+</header>
+
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track">
+    <span>HELLO / NICE TO MEET YOU / I'M SORA /</span><span>HELLO / NICE TO MEET YOU / I'M SORA /</span><span>HELLO / NICE TO MEET YOU / I'M SORA /</span><span>HELLO / NICE TO MEET YOU / I'M SORA /</span><span>HELLO / NICE TO MEET YOU / I'M SORA /</span><span>HELLO / NICE TO MEET YOU / I'M SORA /</span><span>HELLO / NICE TO MEET YOU / I'M SORA /</span><span>HELLO / NICE TO MEET YOU / I'M SORA /</span>
+  </div>
+</div>
+
+<nav aria-label="ページ内メニュー">
+  <ul>
+    <li><a href="#about">自己紹介</a></li>
+    <li><a href="#learning">今学んでいること</a></li>
+    <li><a href="#next">これからやってみたいこと</a></li>
+    <li><a href="#likes">好きなもの</a></li>
+  </ul>
+</nav>
+
+<main>
+  <section id="about">
+    <h2>自己紹介</h2>
+    <p>陸上は中学から高校までの6年間、100m専門でした。今は趣味として運動を続けていて、週2回ほど筋トレをしています。</p>
+    <p>コツコツ続けるのが得意です。初対面では少し緊張しますが、慣れるとよく話します。</p>
+    <p>休日は散歩をしたり、家で動画を見たりして、のんびり過ごすことが多いです。朝は早めに起きて、軽くストレッチをするのが日課です。</p>
+  </section>
+
+  <section id="learning">
+    <h2>今学んでいること</h2>
+    <p>今はTOEICの勉強をがんばっています。まずは単位を取って、少しずつスコアを伸ばしたいです。</p>
+    <p>陸上で身についた「毎日の積み重ねが大事」という考え方で続けています。</p>
+    <p>リスニングが苦手なので、毎日少しだけ英語の音声を聞くようにしています。すきま時間に単語アプリも使っています。</p>
+  </section>
+
+  <section id="next">
+    <h2>これからやってみたいこと</h2>
+    <p>英語に関係する資格や、大学の勉強につながる資格に挑戦したいです。</p>
+    <p>一緒にご飯に行ったり、運動したりできる友達もほしいです。筋トレは初心者なので、おすすめのメニューがあれば教えてください。</p>
+    <p>いつか、英語で外国の人と気軽に話せるようになりたいです。</p>
+  </section>
+
+  <section id="likes">
+    <h2>好きなもの</h2>
+    <dl class="facts">
+      <dt>好きな食べ物</dt>
+      <dd>唐揚げとラーメン。運動のあとは、たくさん食べます。</dd>
+      <dt>よく聴く音楽</dt>
+      <dd>運動中は、テンポの速い曲を聴いています。</dd>
+      <dt>よく見る動画</dt>
+      <dd>お笑いと、運動系の動画です。</dd>
+      <dt>好きな教科</dt>
+      <dd>体育が好きです。暗記は少し苦手です。</dd>
+      <dt>好きな季節</dt>
+      <dd>秋です。走りやすいからです。</dd>
+      <dt>好きな言葉</dt>
+      <dd>「継続は力なり」</dd>
+    </dl>
+    <h3>ひとことQ&amp;A</h3>
+    <dl class="qa">
+      <dt>Q. 100mのベストタイムは？</dt>
+      <dd>A. 内緒です。でも、走るのは今も好きです。</dd>
+      <dt>Q. 朝型？ 夜型？</dt>
+      <dd>A. 朝型です。夜は早めに寝ます。</dd>
+      <dt>Q. 筋トレのコツは？</dt>
+      <dd>A. 初心者なので、むしろ教えてほしいです。</dd>
+    </dl>
+  </section>
+</main>
+
+<footer>
+  <p>仲良くしてね。</p>
+  <!-- 公式サイトの名前とURLが決まったら、下のhrefと文言を差し替える -->
+  <p><a href="#">公式サイトはこちら</a></p>
+</footer>
+
+</body>
+</html>
